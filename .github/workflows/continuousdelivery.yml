@@ -19,7 +19,7 @@ jobs:
     - name: Simulando Continuous Delivery
       uses: actions/upload-artifact@v4
       with:
-        name: projetozipado.zip
-        path: ProductClientHub/*
+        name: ProductClientHub
+        path: .
 
     
