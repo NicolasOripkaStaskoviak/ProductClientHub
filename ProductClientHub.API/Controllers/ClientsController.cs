@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductClientHub.Communication.Requests;
 using ProductClientHub.Communication.Responses;
-#teste
 namespace ProductClientHub.API.Controllers
 {
     [Route("api/[controller]")]
