@@ -13,7 +13,11 @@ namespace ProductClientHub.API.Controllers
         [ProducesResponseType(typeof(ResponseClientJson), StatusCodes.Status201Created)]
         public IActionResult Register([FromBody]RequestClientJson request)
         {
-            return Created();
+            var useCase = new UseCases.Clients.Register.RegisterClientUseCase();
+
+            var response = useCase.Execute(request);
+
+            return Created(string.Empty, response);
         }
 
         [HttpPut]
