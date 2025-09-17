@@ -7,9 +7,8 @@ namespace ProductClientHub.API.UseCases.Clients.Register
     {
         public RegisterClientValidator()
         {
-            RuleFor(client => client.Name).NotEmpty().WithMessage("O nome não pode ser vazio.");
             RuleFor(client => client.Email).EmailAddress().WithMessage("E-mail inválido.");
-
+            RuleFor(client => client.Name).NotEmpty().WithMessage("O nome não pode ser vazio.");
         }
     }
 }
