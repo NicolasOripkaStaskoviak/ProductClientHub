@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductClientHub.Communication.Requests;
 using ProductClientHub.Communication.Responses;
+using ProductClientHub.Exceptions.ExceptionsBase;
 namespace ProductClientHub.API.Controllers
 {
     [Route("api/[controller]")]
@@ -20,9 +21,11 @@ namespace ProductClientHub.API.Controllers
 
                 return Created(string.Empty, response);
             }
-            catch (ArgumentException ex)
+            catch (ProductClientHubException ex)
             {
-                return BadRequest(new ResponseErrorMessagesJson(ex.Message));
+                var errors = ex.GetErrors();
+
+                return BadRequest(new ResponseErrorMessagesJson(errors));
             }
             catch
             {
