@@ -10,7 +10,8 @@ namespace ProductClientHub.API.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=projectdb.octet-stream");
+            // Substituir futuramente
+            optionsBuilder.UseSqlite("Data Source=\"C:\\Users\\paulo\\source\\repos\\NicolasOripkaStaskoviak\\ProductClientHub\\ProductClientHub.API\\Infrastructure\\projectdb.db\"");
         }
 
     }
