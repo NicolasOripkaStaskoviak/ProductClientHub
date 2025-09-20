@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ProductClientHub.API.Filters;
 using ProductClientHub.Communication.Responses;
@@ -10,7 +11,12 @@ public class ExceptionFilterTests
     [Fact]
     public void OnException_ErrorOnValidationException_DeveRetornarBadRequest()
     {
-        var context = new ExceptionContext(new ActionContext(), new List<IFilterMetadata>())
+        var actionContext = new ActionContext
+        {
+            HttpContext = new DefaultHttpContext()
+        };
+
+        var context = new ExceptionContext(actionContext, new List<IFilterMetadata>())
         {
             Exception = new ErrorOnValidationException(new List<string> { "Erro de teste" })
         };
@@ -28,7 +34,12 @@ public class ExceptionFilterTests
     [Fact]
     public void OnException_ExceptionDesconhecida_DeveRetornarErro500()
     {
-        var context = new ExceptionContext(new ActionContext(), new List<IFilterMetadata>())
+        var actionContext = new ActionContext
+        {
+            HttpContext = new DefaultHttpContext()
+        };
+
+        var context = new ExceptionContext(actionContext, new List<IFilterMetadata>())
         {
             Exception = new Exception("Falha inesperada")
         };
@@ -42,5 +53,4 @@ public class ExceptionFilterTests
         var response = Assert.IsType<ResponseErrorMessagesJson>(result.Value);
         Assert.Contains("ERRO DESCONHECIDO", response.Errors);
     }
-
 }
