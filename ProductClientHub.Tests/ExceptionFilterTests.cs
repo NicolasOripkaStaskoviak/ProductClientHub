@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Routing;
 using ProductClientHub.API.Filters;
 using ProductClientHub.Communication.Responses;
 using ProductClientHub.Exceptions.ExceptionsBase;
@@ -10,7 +14,16 @@ public class ExceptionFilterTests
     [Fact]
     public void OnException_ErrorOnValidationException_DeveRetornarBadRequest()
     {
-        var context = new ExceptionContext(new ActionContext(), new List<IFilterMetadata>())
+        // Criação do contexto "fake" completo
+        var httpContext = new DefaultHttpContext();
+        var routeData = new RouteData();
+        var actionDescriptor = new ActionDescriptor();
+        var modelState = new ModelStateDictionary();
+
+        var context = new ExceptionContext(
+            new ActionContext(httpContext, routeData, actionDescriptor, modelState),
+            new List<IFilterMetadata>()
+        )
         {
             Exception = new ErrorOnValidationException(new List<string> { "Erro de teste" })
         };
@@ -25,10 +38,20 @@ public class ExceptionFilterTests
         Assert.Contains("Erro de teste", response.Errors);
     }
 
+
+
     [Fact]
     public void OnException_ExceptionDesconhecida_DeveRetornarErro500()
     {
-        var context = new ExceptionContext(new ActionContext(), new List<IFilterMetadata>())
+        var httpContext = new DefaultHttpContext();
+        var routeData = new RouteData();
+        var actionDescriptor = new ActionDescriptor();
+        var modelState = new ModelStateDictionary();
+
+        var context = new ExceptionContext(
+            new ActionContext(httpContext, routeData, actionDescriptor, modelState),
+            new List<IFilterMetadata>()
+        )
         {
             Exception = new Exception("Falha inesperada")
         };
@@ -42,5 +65,4 @@ public class ExceptionFilterTests
         var response = Assert.IsType<ResponseErrorMessagesJson>(result.Value);
         Assert.Contains("ERRO DESCONHECIDO", response.Errors);
     }
-
 }

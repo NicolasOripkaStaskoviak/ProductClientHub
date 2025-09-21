@@ -3,61 +3,52 @@ using Microsoft.AspNetCore.Mvc;
 using ProductClientHub.Communication.Requests;
 using ProductClientHub.Communication.Responses;
 using ProductClientHub.Exceptions.ExceptionsBase;
+using ProductClientHub.API.UseCases.Clients.Register;
+
 namespace ProductClientHub.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ClientsController : ControllerBase
     {
+        private readonly RegisterClientUseCase _useCase;
+
+        public ClientsController(RegisterClientUseCase useCase)
+        {
+            _useCase = useCase;
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(ResponseClientJson), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErrorMessagesJson), StatusCodes.Status400BadRequest)]
-        public IActionResult Register([FromBody]RequestClientJson request)
+        public IActionResult Register([FromBody] RequestClientJson request)
         {
-            try {
-                var useCase = new UseCases.Clients.Register.RegisterClientUseCase();
-
-                var response = useCase.Execute(request);
-
+            try
+            {
+                var response = _useCase.Execute(request);
                 return Created(string.Empty, response);
             }
             catch (ProductClientHubException ex)
             {
-                var errors = ex.GetErrors();
-
-                return BadRequest(new ResponseErrorMessagesJson(errors));
+                return BadRequest(new ResponseErrorMessagesJson(ex.GetErrors()));
             }
             catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseErrorMessagesJson("ERRO DESCONHECIDO"));
-
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new ResponseErrorMessagesJson("ERRO DESCONHECIDO"));
             }
-
         }
 
         [HttpPut]
-        public IActionResult Update()
-        {
-            return Ok();
-        }
+        public IActionResult Update() => Ok();
 
         [HttpGet]
-        public IActionResult GetAll()
-        {
-            return Ok();
-        }
+        public IActionResult GetAll() => Ok();
 
-        [HttpGet]
-        [Route("{id}")]
-        public IActionResult GetById([FromRoute]Guid id)
-        {
-            return Ok();
-        }
+        [HttpGet("{id}")]
+        public IActionResult GetById([FromRoute] Guid id) => Ok();
 
         [HttpDelete]
-        public IActionResult Delete()
-        {
-            return Ok();
-        }
+        public IActionResult Delete() => Ok();
     }
 }
