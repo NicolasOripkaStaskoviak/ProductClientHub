@@ -1,29 +1,28 @@
-using ProductClientHub.API.Filters;
+using Microsoft.EntityFrameworkCore;
+using ProductClientHub.API.Infrastructure;
+using ProductClientHub.API.UseCases.Clients.Register;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// registra o DbContext com SQLite
+builder.Services.AddDbContext<ProductClientHubDbContext>(options =>
+    options.UseSqlite("Data Source=projectdb.db"));
+
+// registra o use case
+builder.Services.AddScoped<RegisterClientUseCase>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMvc(option => option.Filters.Add(typeof(ExceptionFilter)));
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

@@ -38,6 +38,8 @@ public class ExceptionFilterTests
         Assert.Contains("Erro de teste", response.Errors);
     }
 
+
+
     [Fact]
     public void OnException_ExceptionDesconhecida_DeveRetornarErro500()
     {

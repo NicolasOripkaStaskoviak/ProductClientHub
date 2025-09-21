@@ -27,6 +27,7 @@
 		<ProjectReference Include="..\ProductClientHub.API\ProductClientHub.API.csproj" />
 		<ProjectReference Include="..\ProductClientHub.Communication\ProductClientHub.Communication.csproj" />
 		<ProjectReference Include="..\ProductClientHub.Exceptions\ProductClientHub.Exceptions.csproj" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
 	</ItemGroup>
 
 </Project>
